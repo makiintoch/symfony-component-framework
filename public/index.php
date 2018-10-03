@@ -28,13 +28,11 @@ try {
     $controller = $controllerResolver->getController($request);
     $arguments = $argumentResolver->getArguments($request, $controller);
 
-    dump($arguments);
-
     $response = call_user_func_array($controller, $arguments);
 } catch (ResourceNotFoundException $e) {
     $response = new Response('Page Not Found', 404);
 } catch (Exception $e) {
-    $response = new Response('An error occurred', 500);
+    $response = new Response('Caught exception: '.$e->getMessage(), 500);
 }
 
 $response->send();

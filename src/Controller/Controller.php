@@ -4,17 +4,24 @@
 namespace App\Controller;
 
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
 class Controller
 {
-    public function render(Request $request)
+    private $templatePath = __DIR__.'/../../template/';
+
+    public function render(string $template, array $args)
     {
-        extract($request->attributes->all(), EXTR_SKIP);
+        $path = $this->templatePath.$template;
+
+        if (!file_exists($path)) {
+            throw new \Exception('Template not found.');
+        }
+
+        extract($args, EXTR_SKIP);
         ob_start();
-        require sprintf(__DIR__.'/../src/pages/%s.php', $_route);
+        require sprintf($path);
     
         return new Response(ob_get_clean());
     }    

@@ -13,7 +13,10 @@ class HomeController extends Controller
 
     public function index()
     {
-        return new Response('This is home page');
+        return $this->render('home/home.php', [
+            'controller' => 'HomeController',
+            'action' => 'index'
+        ]);
     }
 
     public function hello($name)
