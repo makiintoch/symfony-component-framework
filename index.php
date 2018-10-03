@@ -1,5 +1,10 @@
 <?php
 
-$name = $_GET['name'];
+// check value is set
+$name = $_GET['name'] ?? 'World';
 
-printf('Hello %s', $name);
+// add header
+header('Content-Type: text/html; charset=utf-8');
+
+// XSS protection
+printf('Hello %s', htmlspecialchars($name, ENT_QUOTES, 'UTF-8'));
