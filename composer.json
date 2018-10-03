@@ -1,0 +1,16 @@
+{
+    "name": "Symfony component framework",
+    "description": "Symfony component framework",
+    "authors": [
+        {
+            "name": "makiintoch",
+            "email": "makiintoch@gmail.com"
+        }
+    ],
+    "require": {
+        
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.3"
+    }
+}
