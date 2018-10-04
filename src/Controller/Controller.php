@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Controller
 {
-    private $templatePath = __DIR__.'/../../template/';
+    private $templatePath = __DIR__.'/../../templates/';
 
     public function render(string $template, array $args)
     {
