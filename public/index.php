@@ -10,6 +10,8 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Symfony\Component\HttpKernel\HttpCache\HttpCache;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use App\Kernel;
 use App\EventListener\TestListener;
@@ -29,6 +31,9 @@ $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
 
 $kernel = new Kernel($dispatcher, $matcher, $controllerResolver, $argumentResolver);
-$response = $kernel->handle($request);
+$kernel = new HttpCache(
+    $kernel,
+    new Store(__DIR__.'/../cache')
+);
 
-$response->send();
+$kernel->handle($request)->send();
