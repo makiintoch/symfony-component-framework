@@ -18,5 +18,8 @@ $routes->add('home_bye', new Route('/bye/{name}', [
     'name' => 'World',
     '_controller' => [HomeController::class, 'bye']
 ]));
+$routes->add('home_test', new Route('/test', [
+    '_controller' => [HomeController::class, 'test']
+]));
 
 return $routes;

@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -17,6 +16,11 @@ class HomeController extends Controller
             'controller' => 'HomeController',
             'action' => 'index'
         ]);
+    }
+
+    public function test()
+    {
+        return "Test listener";
     }
 
     public function hello($name)

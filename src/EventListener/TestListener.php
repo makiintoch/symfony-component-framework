@@ -4,26 +4,24 @@
 namespace App\EventListener;
 
 
-use App\ResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class TestListener implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    public function onView(GetResponseForControllerResultEvent $event)
     {
-        return ['response' => 'onResponse'];
+        $response = $event->getControllerResult();
+
+        if (is_string($response)) {
+            $event->setResponse(new Response($response));
+        }
     }
 
-    public function onResponse(ResponseEvent $event)
+    public static function getSubscribedEvents()
     {
-        $response = $event->getResponse();
-
-        if ($response->isRedirection()
-            || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
-            || 'html' !== $event->getRequest()->getRequestFormat()
-        ) return;
-
-    $response->setContent($response->getContent().'ADD TEST EVENT');
+        return ['kernel.view' => 'onView'];
     }
 }

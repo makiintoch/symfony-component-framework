@@ -24,7 +24,7 @@ class Controller
         require sprintf($path);
 
         $response = new Response(ob_get_clean());
-        $response->setTtl(60);
+        $response->setTtl(10);
     
         return $response;
     }    
