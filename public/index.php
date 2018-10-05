@@ -10,7 +10,9 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use App\Kernel;
+use App\EventListener\TestListener;
 
 
 $request = Request::createFromGlobals();
@@ -19,10 +21,14 @@ $routes = require __DIR__.'/../config/routes.php';
 $context = new RequestContext();
 $matcher = new UrlMatcher($routes, $context);
 
+$dispatcher = new EventDispatcher();
+
+$dispatcher->addSubscriber(new TestListener());
+
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
 
-$kernel = new Kernel($matcher, $controllerResolver, $argumentResolver);
+$kernel = new Kernel($dispatcher, $matcher, $controllerResolver, $argumentResolver);
 $response = $kernel->handle($request);
 
 $response->send();
