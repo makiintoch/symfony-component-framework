@@ -3,32 +3,19 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel;
-use Symfony\Component\Routing;
+use App\EventListener\StringResponseListener;
+use Symfony\Component\DependencyInjection\Reference;
 
+
+$sc = require __DIR__.'/../config/container.php';
+$sc->setParameter('routes', include __DIR__.'/../config/routes.php');
+
+$sc->register('listener.string_response', StringResponseListener::class);
+$sc->getDefinition('dispatcher')
+    ->addMethodCall('addSubscriber', [new Reference('listener.string_response')]);
 
 $request = Request::createFromGlobals();
-$requestStack = new RequestStack();
-$routes = require __DIR__.'/../config/routes.php';
 
-$context = new Routing\RequestContext();
-$matcher = new Routing\Matcher\UrlMatcher($routes, $context);
-
-$controllerResolver = new HttpKernel\Controller\ControllerResolver();
-$argumentResolver = new HttpKernel\Controller\ArgumentResolver();
-
-$dispatcher = new EventDispatcher();
-$dispatcher->addSubscriber(new App\EventListener\TestListener());
-$dispatcher->addSubscriber(new HttpKernel\EventListener\RouterListener($matcher, $requestStack));
-$dispatcher->addSubscriber(new HttpKernel\EventListener\ResponseListener('UTF-8'));
-$dispatcher->addSubscriber(new HttpKernel\EventListener\ExceptionListener('App\Controller\ErrorController::exception'));
-
-
-$kernel = new App\Kernel($dispatcher, $controllerResolver, $requestStack, $argumentResolver);
-
-$response = $kernel->handle($request);
+$response = $sc->get('kernel')->handle($request);
 $response->send();

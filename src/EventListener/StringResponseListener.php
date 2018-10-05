@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class TestListener implements EventSubscriberInterface
+class StringResponseListener implements EventSubscriberInterface
 {
     public function onView(GetResponseForControllerResultEvent $event)
     {
